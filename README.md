@@ -97,10 +97,10 @@ you may want to add operation with out all feature it provide with subclassing, 
 let queue = OperationQueue()
 
 queue.addOperation(identifier: .unique(), queuePriority: .normal, qualityOfService: .background) { completed in
-	// your code
+   // your code
 	
-	// after you've done the completed block should be called to dequeue operation from queue
-	completed()
+   // after you've done the completed block should be called to dequeue operation from queue
+   ompleted()
 	
 } onCompleted: {
    // will be call just right before the dequeing operation from queue
