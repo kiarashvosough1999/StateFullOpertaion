@@ -29,4 +29,15 @@ import Foundation
 
 public struct SFOAlias {
     public typealias OperationCompletedSignal = () -> Void
+    
+    public typealias OnOperationCompltion = () -> Void
+    
+    public typealias OnOperationCanceled = () -> Void
+    
+    public typealias OnOperationFinished = () -> Void
+    
+    public typealias OnOperationExecuting = () -> Void
+    
+    public typealias OperationBlock = (OnOperationCompltion) -> Void
+    
 }
