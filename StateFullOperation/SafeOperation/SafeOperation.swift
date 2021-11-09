@@ -109,6 +109,25 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         }
     }
     
+    // MARK: - Handler
+    
+    open var onCompleted: SFOAlias.OnOperationCompltion? {
+        get {
+            return completionBlock
+        }
+        set {
+            completionBlock = newValue
+        }
+    }
+    
+    open var onCanceledAction: SFOAlias.OnOperationCanceled?
+    
+    open var onFinishedAction: SFOAlias.OnOperationFinished?
+    
+    open var onExecutingAction: SFOAlias.OnOperationExecuting?
+    
+    open var operationExecutable: SFOAlias.OperationBlock?
+    
     /// Overridable property indicating whether the operation is `async` or not
     open override var isAsynchronous: Bool { return true }
     
@@ -130,7 +149,6 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     }
     
     private func setOperationConfigurationChanges() {
-        self.completionBlock = configuration.compeletedSignal
         self.queuePriority = configuration.queuePriority
         self.qualityOfService = configuration.qualityOfService
         self.name = configuration.identifier.rawValue
@@ -141,6 +159,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     public override func start() {
         do {
             try shouldStartRunnable()
+            onExecutingAction?()
         } catch {
             fatalError()
         }
@@ -162,12 +181,21 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         }
     }
     
-    open func runnable() throws {}
+    open func runnable() throws {
+        if operationExecutable == nil {
+            didFinishRunnable()
+        } else {
+            operationExecutable?({ [weak self] in
+                self?.didFinishRunnable()
+            })
+        }
+    }
     
     open override func cancel() {
         super.cancel()
         do {
             try cancelRunnable()
+            onCanceledAction?()
         } catch {
             fatalError()
         }
@@ -178,6 +206,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         isFinished = true
         isCancelled = true
         didCancelRunnable()
+        onCanceledAction?()
     }
     
     open func didCancelRunnable() {}
@@ -187,6 +216,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         isFinished = true
         isCancelled = false
         didFinishRunnable()
+        onFinishedAction?()
     }
     
     open func didFinishRunnable() {}
@@ -208,11 +238,5 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
                 """))
         }
         queue.waitUntilAllOperationsAreFinished()
-    }
-    
-    @discardableResult
-    open func setOperationCompletedSignal(_ sig: SFOAlias.OperationCompletedSignal?) -> Self {
-        completionBlock = sig
-        return self
     }
 }

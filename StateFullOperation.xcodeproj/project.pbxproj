@@ -42,6 +42,7 @@
 		DE1A7B8B27382EFC006AFE65 /* StateFullOperation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE1A7B2327382CB6006AFE65 /* StateFullOperation.framework */; };
 		DE1A7B8C27382EFC006AFE65 /* StateFullOperation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = DE1A7B2327382CB6006AFE65 /* StateFullOperation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DE46F9682738326D00BFBC23 /* SafeOperationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE46F9672738326D00BFBC23 /* SafeOperationTests.swift */; };
+		DE99726F273AE78C0064E5C3 /* OperationQueue++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +113,7 @@
 		DE1A7B8327382DCC006AFE65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE1A7B8527382DCC006AFE65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DE46F9672738326D00BFBC23 /* SafeOperationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeOperationTests.swift; sourceTree = "<group>"; };
+		DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue++Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 		DE1A7B3D27382CD4006AFE65 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				DE99726D273AE7760064E5C3 /* Extensions */,
 				DE1A7B4327382D08006AFE65 /* Errors */,
 				DE1A7B6D27382DA4006AFE65 /* SFOAlias.swift */,
 			);
@@ -293,6 +296,14 @@
 				DE46F9672738326D00BFBC23 /* SafeOperationTests.swift */,
 			);
 			path = SafeOperationTests;
+			sourceTree = "<group>";
+		};
+		DE99726D273AE7760064E5C3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -448,6 +459,7 @@
 				DE1A7B5127382D89006AFE65 /* OperationReadyState.swift in Sources */,
 				DE1A7B6227382D99006AFE65 /* ControlableOperation++Protocol.swift in Sources */,
 				DE1A7B6E27382DA4006AFE65 /* SFOAlias.swift in Sources */,
+				DE99726F273AE78C0064E5C3 /* OperationQueue++Extension.swift in Sources */,
 				DE1A7B6527382D99006AFE65 /* OperationState++Protocol.swift in Sources */,
 				DE1A7B6C27382D9F006AFE65 /* OperationStates.swift in Sources */,
 				DE1A7B5027382D89006AFE65 /* OperationExecutingState.swift in Sources */,

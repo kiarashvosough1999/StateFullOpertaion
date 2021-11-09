@@ -30,7 +30,4 @@ import Foundation
 internal protocol ConfigurableOperation {
     
     var configuration: SafeOperationConfiguration { get }
-    
-    @discardableResult
-    func setOperationCompletedSignal(_ sig: SFOAlias.OperationCompletedSignal?) -> Self
 }
