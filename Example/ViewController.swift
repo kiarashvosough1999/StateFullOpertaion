@@ -14,21 +14,32 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
         do {
             let op = MyOperation(operationQueue: queue, configuration: .init())
-            op.setOperationCompletedSignal {
-                print(self.queue.operationCount)
-            }
             try op.enqueueSelf()
             DispatchQueue.main.asyncAfter(deadline: .now() + 9) {
                 print(self.queue.operationCount)
             }
+            
+            try queue.addOperation(identifier: .unique(), queuePriority: .normal, qualityOfService: .userInteractive) { completed in
+                Thread.sleep(forTimeInterval: 6)
+                print("completed")
+                completed()
+            } onCompleted: {
+                print("onCompleted")
+            } onCanceled: {
+                print("onCanceled")
+            } onFinished: {
+                print("onFinished")
+            } onExecuting: {
+                print("onExecuting")
+            }
+            
         } catch {
             print(error)
         }
     }
-
 
 }
 

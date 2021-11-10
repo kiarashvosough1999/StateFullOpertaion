@@ -24,10 +24,10 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/kiarashvosough1999/StateFullOpertaion.git", :tag => "#{spec.version}" }
 
-  spec.source_files  = "StateFullOpertaion/**/*.{h,m,swift}"
+  spec.source_files  = "StateFullOperation/**/*.{h,m,swift}"
   # spec.exclude_files = "Classes/Exclude"
 
   spec.swift_versions = ['5.3', '5.4' , '5.5']
-  spec.framework = "UIKit"
+  spec.framework = ["UIKit","Foundation"]
 
 end

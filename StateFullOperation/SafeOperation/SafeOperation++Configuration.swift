@@ -29,18 +29,15 @@ import Foundation
 
 public struct SafeOperationConfiguration {
     
-    public let compeletedSignal: SFOAlias.OperationCompletedSignal?
     public let identifier: OperationIdentifier
     public let queuePriority: Operation.QueuePriority
     public let qualityOfService: QualityOfService
     public let waitUntilAllOperationsAreFinished: Bool
     
-    public init(compeletedSignal: SFOAlias.OperationCompletedSignal? = .none,
-         identifier: OperationIdentifier = .unique(),
-         queuePriority: Operation.QueuePriority = .normal,
-         qualityOfService: QualityOfService = .default,
-         waitUntilAllOperationsAreFinished: Bool = false) {
-        self.compeletedSignal = compeletedSignal
+    public init(identifier: OperationIdentifier = .unique(),
+                queuePriority: Operation.QueuePriority = .normal,
+                qualityOfService: QualityOfService = .default,
+                waitUntilAllOperationsAreFinished: Bool = false) {
         self.identifier = identifier
         self.queuePriority = queuePriority
         self.qualityOfService = qualityOfService
