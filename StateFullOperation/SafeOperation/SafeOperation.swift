@@ -158,8 +158,8 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     /// Override shouldStartRunnable instead
     public override func start() {
         do {
-            try shouldStartRunnable()
             onExecutingAction?()
+            try shouldStartRunnable()
         } catch {
             fatalError()
         }
@@ -186,7 +186,10 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
             didFinishRunnable()
         } else {
             operationExecutable?({ [weak self] in
-                self?.didFinishRunnable()
+                guard let self = self else {
+                    throw SFOError.safeOperationError(reason: .operationNotFoundNil)
+                }
+                try self.finishRunnable()
             })
         }
     }
