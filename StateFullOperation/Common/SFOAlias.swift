@@ -28,7 +28,8 @@
 import Foundation
 
 public struct SFOAlias {
-    public typealias OperationCompletedSignal = () -> Void
+    
+    public typealias OperationCompletedSignal = () throws -> Void
     
     public typealias OnOperationCompltion = () -> Void
     
@@ -38,6 +39,6 @@ public struct SFOAlias {
     
     public typealias OnOperationExecuting = () -> Void
     
-    public typealias OperationBlock = (OnOperationCompltion) -> Void
+    public typealias OperationBlock = (OperationCompletedSignal) -> Void
     
 }
