@@ -28,11 +28,11 @@
 import Foundation
 
 public enum SFOError: Error {
-    case operationStateError(reason: YeezyOperationStateError)
-    case safeOperationError(reason: YeezySafeOperationError)
+    case operationStateError(reason: SFOOperationStateError)
+    case safeOperationError(reason: SFOSafeOperationError)
 }
 
-public enum YeezyOperationStateError: Error {
+public enum SFOOperationStateError: Error {
     case dealocatedOperation(String)
     case operationIsNotExecutingToFinish(String)
     case cancelDuringWaitingForDeadline(String)
@@ -40,10 +40,11 @@ public enum YeezyOperationStateError: Error {
     case misUseError(String)
 }
 
-public enum YeezySafeOperationError: Error {
+public enum SFOSafeOperationError: Error {
     case operationAlreadyCanceled(String)
     case queueFoundNil(String, type:QueueType)
     case operationNotFound(String)
+    case operationNotFoundNil
     case canNotAddDependency(String)
     case canNotWaitForOtherOperation(String)
 }
