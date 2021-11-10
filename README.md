@@ -44,10 +44,12 @@ I have provided one sample project in the repository. To use it clone the repo, 
 SafeOperation is a convinient way of using operation.
 It offers new features which the operation itself does not support or could be so tricky to use.
 
-> Subclasses must not override any method of the base Opertaion Class
+> Subclasses must not override any method of the base Opertaion Class or call them
  , instead they can override the provided method on protocol `OperationLifeCycleProvider` to take control of what should be done.
  
 > `enqueueSelf` can be use to add operation to a Queue, just make sure you provide operation a queue within its initializer.
+
+#### Subclassing
  
  ```swift
  class MyOperation: SafeOperation {
@@ -62,6 +64,19 @@ It offers new features which the operation itself does not support or could be s
         /// call `cancelRunnable()` whenever the task finish
     }
     
+    override func finishRunnable() throws {
+        try finishRunnable()
+        /// make sure you call `finishRunnable()`
+    }
+    
+    override func didFinishRunnable() {
+        // this method will be called sync-ly after runnable retured
+        // if `runnable()` overrided, after it is finished,
+        // `super.runnable()` can be called to run `didFinishRunnable()`
+        // this method will be also called after calling `finishRunnable()`
+        // do whatever after the runnable finished
+    }
+    
     override func cancelRunnable() throws {
         try super.cancelRunnable()
         /// make sure you call `super.cancelRunnable()` in order to change operation flag
@@ -73,7 +88,31 @@ It offers new features which the operation itself does not support or could be s
 }
  ```
 
+#### Closure
 
+you may want to add operation with out all feature it provide with subclassing, using new method on OperationQueue can become handy.
+
+```swift
+
+let queue = OperationQueue()
+
+queue.addOperation(identifier: .unique(), queuePriority: .normal, qualityOfService: .background) { completed in
+   // your code
+	
+   // after you've done the completed block should be called to dequeue operation from queue
+   ompleted()
+	
+} onCompleted: {
+   // will be call just right before the dequeing operation from queue
+} onCanceled: {
+   // called when `cancelRunnable()` is called
+} onFinished: {
+   // called when `completed()` is called inside operation block
+} onExecuting: {
+   // called when opertion is enqued and started
+}
+
+```
 
 
 ## Contributors
