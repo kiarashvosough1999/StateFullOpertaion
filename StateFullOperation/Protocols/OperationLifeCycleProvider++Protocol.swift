@@ -36,7 +36,15 @@ import Foundation
  
  */
 
-public protocol OperationLifeCycleProvider: AnyObject {
+public protocol OperationControlable: AnyObject {
+    
+    var onCanceledAction: SFOAlias.OnOperationCanceled? { get }
+    
+    var onFinishedAction: SFOAlias.OnOperationFinished? { get }
+    
+    var onExecutingAction: SFOAlias.OnOperationExecuting? { get }
+    
+    var operationExecutable: SFOAlias.OperationBlock? { get }
     
     /// Blocks the current thread until all of the receiver’s queued and executing operations finish executing.
     /// When called, this method blocks the current thread and waits for the receiver’s current and queued operations to finish executing.
@@ -45,12 +53,23 @@ public protocol OperationLifeCycleProvider: AnyObject {
     /// If there are no operations in the queue, this method returns immediately.
     func waitUntilAllOperationsAreFinished() throws
     
-    
     /// ٍEnququ Self in `OperationQueue` to start
     /// This method should be called instead of `operationQueue.addOperation(self)`
     /// `operationQueue.addOperation(self)` was imeplemnted in super class with more safety
     ///  - Throws: queueFoundNil ---> if the `OperationQueue` is nil
     func enqueueSelf() throws
+    
+    /// This method does not force your operation code to stop.
+    /// Instead, it updates the object’s internal flags to reflect the change in state.
+    /// If the operation has already finished executing, this method has no effect.
+    /// Canceling an operation that is currently in an operation queue, but not yet executing,
+    /// makes it possible to remove the operation from the queue sooner than usual.
+    func cancelRunnable() throws
+    
+    func finishRunnable() throws
+}
+
+public protocol OperationLifeCycleProvider: OperationControlable {
     
     /// Performs the receiver’s non-concurrent task.
     /// The default implementation of this method does nothing. You should override this method to perform the desired task.
@@ -75,12 +94,7 @@ public protocol OperationLifeCycleProvider: AnyObject {
     /// The default implementation of this method calls the receiver’s `runnable()` method to start the desired tasks.
     func startRunnable() throws
     
-    /// This method does not force your operation code to stop.
-    /// Instead, it updates the object’s internal flags to reflect the change in state.
-    /// If the operation has already finished executing, this method has no effect.
-    /// Canceling an operation that is currently in an operation queue, but not yet executing,
-    /// makes it possible to remove the operation from the queue sooner than usual.
-    func cancelRunnable() throws
-    
     func didCancelRunnable()
+    
+    func didFinishRunnable()
 }
