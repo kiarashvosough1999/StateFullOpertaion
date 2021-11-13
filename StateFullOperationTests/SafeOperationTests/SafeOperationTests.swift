@@ -29,7 +29,7 @@ class SafeOperationTests: XCTestCase {
         
         let op = MyOperation(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
         
-        op.setOperationCompletedSignal {
+        op.onCompleted = {
             XCTAssertEqual(self.queue?.operationCount, 0)
         }
         
@@ -46,7 +46,7 @@ class SafeOperationTests: XCTestCase {
         
         let op = MyOperation(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation, startExpectation: StartMethodExpectation)
         
-        op.setOperationCompletedSignal {
+        op.onCompleted = {
             XCTAssertEqual(self.queue?.operationCount, 0)
         }
         
