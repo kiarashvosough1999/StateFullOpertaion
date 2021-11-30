@@ -127,7 +127,7 @@ public class StateFullOperation: SafeOperation,
         }
     }
     
-    open override func shouldStartRunnable() throws {
+    open override func shouldStartOperation() throws {
         if self.isCancelled {
             try $operationState.read { state in
                 try state.cancelOperation()

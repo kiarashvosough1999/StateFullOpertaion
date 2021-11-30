@@ -49,7 +49,7 @@ internal final class OperationExecutingState: OperationState  {
         self.queueState.enqueued = true
     }
     
-    func start() throws {
+    internal func start() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -72,7 +72,7 @@ internal final class OperationExecutingState: OperationState  {
     /// - Throws:
     ///  - OperationControllerError.dealocatedOperation on context nil
     ///  - OperationControllerError.operationQueueIsNil on underlyingQueue nil
-    func await() throws {
+    internal func await() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -93,7 +93,7 @@ internal final class OperationExecutingState: OperationState  {
     /// 2. Changing state to `OperationFinishState`
     /// - Parameter execute: onFinish block which was provoded by overriding it on subclasses
     /// - Throws: OperationControllerError.dealocatedOperation or
-    func completeOperation() throws {
+    internal func completeOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -105,7 +105,7 @@ internal final class OperationExecutingState: OperationState  {
         context.onFinished?()
         
     }
-    func cancelOperation() throws {
+    internal func cancelOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -118,7 +118,7 @@ internal final class OperationExecutingState: OperationState  {
     }
     
     
-    func suspend() throws {
+    internal func suspend() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """

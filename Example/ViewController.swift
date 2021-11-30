@@ -17,15 +17,15 @@ class ViewController: UIViewController {
         
         do {
             let op = MyOperation(operationQueue: queue, configuration: .init())
-            try op.enqueueSelf()
+            try op.enqueueOperation()
             DispatchQueue.main.asyncAfter(deadline: .now() + 9) {
                 print(self.queue.operationCount)
             }
             
-            try queue.addOperation(identifier: .unique(), queuePriority: .normal, qualityOfService: .userInteractive) { completed in
+            try queue.addTask(identifier: .unique(), queuePriority: .normal, qualityOfService: .userInteractive) { completed in
                 Thread.sleep(forTimeInterval: 6)
                 print("completed")
-                completed()
+                try completed()
             } onCompleted: {
                 print("onCompleted")
             } onCanceled: {
@@ -46,12 +46,12 @@ class ViewController: UIViewController {
 
 class MyOperation: SafeOperation {
    
-   override func shouldStartRunnable() throws {
-       try super.shouldStartRunnable()
+   override func shouldStartOperation() throws {
+       try super.shouldStartOperation()
        /// do some pre-requireties before the runnable start
    }
    
-   override func runnable() throws {
+   override func operation() throws {
        /// impelement your task here
        /// call `cancelRunnable()` whenever the task finish
        print("start")
@@ -59,15 +59,15 @@ class MyOperation: SafeOperation {
        Thread.sleep(forTimeInterval: 5)
        let eDate = Date()
        print("end", eDate.timeIntervalSince(sDate))
-       try finishRunnable()
+       try finishOperation()
    }
    
-   override func cancelRunnable() throws {
-       try super.cancelRunnable()
+   override func cancelOperation() throws {
+       try super.cancelOperation()
        /// make sure you call `super.cancelRunnable()` in order to change operation flag
    }
    
-   override func didCancelRunnable() {
+   override func didCancelOperation() {
        /// after operation canceled and before the operation is poped from queue this method will be called
    }
 }
