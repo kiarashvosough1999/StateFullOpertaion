@@ -29,7 +29,7 @@ import Foundation
 
 /**
  
- It offers new features which the operation itself does not support or could be so tricky to use
+ `SafeOperation` offers new features which the operation itself does not support or could be so tricky to use
  
  It provide `thread safe` operation flags `setter` and `getter` and hold the flags on its own local variable
  
@@ -55,7 +55,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     
     internal private(set) var configuration: SafeOperationConfiguration
     
-    /// Any changes to operation flags will be stored on these variables
+    /// Any changes to operation flags will be stored on these variables to keep track of states
     public lazy var _executing: Bool = false
     
     public lazy var _finished: Bool = false
@@ -67,13 +67,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     /// `Thread Safe Readable and Settable` Variables Indicating Operation Flags
     
     /**
-     
-     `All these properties are observed (as key value) and any chnages should be informed`
-     
-     If you have the intent to override this variable, take care of two things:
-     - Synchronize the setter and getter.
-     - Informs the observed object that the value of a given property is about to change.
-     
+     These Properties are part of NSOperation and no changes should be applied to them in subclasses
      */
     
     open override var isExecuting: Bool {
@@ -92,9 +86,12 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
             return lock.synchronize { _finished }
         }
         set {
+            willFinishOperation()
             willChangeValue(forKey: #keyPath(Operation.isFinished))
             lock.synchronize { _finished = newValue }
             didChangeValue(forKey: #keyPath(Operation.isFinished))
+            didFinishOperation()
+            onFinishedOperationAction?()
         }
     }
     
@@ -103,9 +100,12 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
             return lock.synchronize { _canceled }
         }
         set {
+            willCancelOperation()
             willChangeValue(forKey: #keyPath(Operation.isCancelled))
             lock.synchronize { _canceled = newValue }
             didChangeValue(forKey: #keyPath(Operation.isCancelled))
+            didCancelOperation()
+            onCanceledOperationAction?()
         }
     }
     
@@ -120,11 +120,11 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         }
     }
     
-    open var onCanceledAction: SFOAlias.OnOperationCanceled?
+    open var onCanceledOperationAction: SFOAlias.OnOperationCanceled?
     
-    open var onFinishedAction: SFOAlias.OnOperationFinished?
+    open var onFinishedOperationAction: SFOAlias.OnOperationFinished?
     
-    open var onExecutingAction: SFOAlias.OnOperationExecuting?
+    open var onExecutingOperationAction: SFOAlias.OnOperationExecuting?
     
     open var operationExecutable: SFOAlias.OperationBlock?
     
@@ -138,7 +138,8 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     /// Any unconsidered manipulation on this reference will results in unexcpected behavior on queue
     public weak var operationQueue: OperationQueue?
     
-    // MARK: - init
+    // MARK: - LifeCycle
+    
     public init(operationQueue: OperationQueue?,
                 configuration: SafeOperationConfiguration) {
         self.lock = NSLock()
@@ -158,73 +159,82 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     /// Override shouldStartRunnable instead
     public override func start() {
         do {
-            onExecutingAction?()
-            try shouldStartRunnable()
+            onExecutingOperationAction?()
+            try shouldStartOperation()
         } catch {
             fatalError()
         }
     }
     
-    open func shouldStartRunnable() throws {
+    /// overide this method to define your own implmentation
+    /// default implementaion checks for cancled or finished operation and throws error
+    /// - Throws : `SFOError.safeOperationError` with reason `operationAlreadyCanceled`
+    open func shouldStartOperation() throws {
         if isCancelled || isFinished {
             isFinished = true
             isExecuting = false
             throw SFOError.safeOperationError(reason: .operationAlreadyCanceled("operation with identifier \(identifier) is already canceled, cannot start canceled operation")
             )
         }
-        try startRunnable()
+        try startOperation()
     }
     
-    open func startRunnable() throws {
+    /// This method will be called right after the checks succeded inside `shouldStartRunnable()`
+    /// It start `runnable` method inside `autorealsepool` block
+    open func startOperation() throws {
         try autoreleasepool {
-            try runnable()
+            try operation()
         }
     }
     
-    open func runnable() throws {
-        if operationExecutable == nil {
-            didFinishRunnable()
-        } else {
-            operationExecutable?({ [weak self] in
+    open func operation() throws {
+        if operationExecutable != nil {
+            try operationExecutable?({ [weak self] in
                 guard let self = self else {
                     throw SFOError.safeOperationError(reason: .operationNotFoundNil)
                 }
-                try self.finishRunnable()
+                try self.finishOperation()
             })
         }
     }
     
+    // MARK: - Cancelation Method
+    
+    /// Do not override this method or call
     open override func cancel() {
         super.cancel()
         do {
-            try cancelRunnable()
-            onCanceledAction?()
+            try cancelOperation()
         } catch {
             fatalError()
         }
     }
     
-    open func cancelRunnable() throws {
-        isExecuting = false
-        isFinished = true
+    open func willCancelOperation() {}
+    
+    open func cancelOperation() throws {
         isCancelled = true
-        didCancelRunnable()
-        onCanceledAction?()
-    }
-    
-    open func didCancelRunnable() {}
-    
-    open func finishRunnable() throws {
         isExecuting = false
         isFinished = true
-        isCancelled = false
-        didFinishRunnable()
-        onFinishedAction?()
     }
     
-    open func didFinishRunnable() {}
+    open func didCancelOperation() {}
     
-    open func enqueueSelf() throws {
+    // MARK: - Finish Methods
+    
+    open func willFinishOperation() {}
+    
+    open func finishOperation() throws {
+        isFinished = true
+        isExecuting = false
+        isCancelled = false
+    }
+    
+    open func didFinishOperation() {}
+    
+    // MARK: - Queue Methods
+    
+    open func enqueueOperation() throws {
         guard let queue = operationQueue else {
             throw SFOError
                 .safeOperationError(reason: .queueFoundNil("Can not enqueue operation with identifier \(identifier)", type: .operation(" OperationQueue assosiatated with operation with identifier \(identifier) was found nil"))
@@ -233,13 +243,14 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
         queue.addOperation(self)
     }
     
-    open func waitUntilAllOperationsAreFinished() throws {
+    open func waitUntilAllOperationAreFinished() throws {
         guard let queue = operationQueue, configuration.waitUntilAllOperationsAreFinished else {
             throw SFOError.safeOperationError(reason: .canNotWaitForOtherOperation("""
                 Could not wait for all operation to finish,
                 OperationQueue associated on operation with identifier: \(name ?? "") was found nil
                 """))
         }
+//        queue.cancelAllOperations()
         queue.waitUntilAllOperationsAreFinished()
     }
 }

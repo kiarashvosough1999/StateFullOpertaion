@@ -29,15 +29,13 @@ import Foundation
 
 internal final class OperationSuspendState: OperationState {
     
+    internal var state: OperationStates { .suspended }
+    
     internal weak var context: Context?
     
     internal var isExecuting: Bool { false }
     
     internal var isFinished: Bool { false }
-    
-    internal var enqueued: Bool = false
-    
-    internal var state: OperationStates { .suspended }
     
     internal var isCanceled: Bool { true }
     
@@ -51,7 +49,7 @@ internal final class OperationSuspendState: OperationState {
         self.queueState = queueState
     }
     
-    func await() throws {
+    internal func await() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -65,7 +63,7 @@ internal final class OperationSuspendState: OperationState {
             .await()
     }
     
-    func start() throws {
+    internal func start() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -81,7 +79,7 @@ internal final class OperationSuspendState: OperationState {
         ))
     }
     
-    func suspend() throws {
+    internal func suspend() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -97,7 +95,7 @@ internal final class OperationSuspendState: OperationState {
         ))
     }
     
-    func cancelOperation() throws {
+    internal func cancelOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """

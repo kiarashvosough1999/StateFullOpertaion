@@ -39,6 +39,6 @@ public struct SFOAlias {
     
     public typealias OnOperationExecuting = () -> Void
     
-    public typealias OperationBlock = (OperationCompletedSignal) -> Void
+    public typealias OperationBlock = (OperationCompletedSignal) throws -> Void
     
 }

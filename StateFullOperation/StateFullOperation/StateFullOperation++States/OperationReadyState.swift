@@ -27,21 +27,21 @@
 
 import Foundation
 
-open class OperationReadyState: OperationState {
+final public class OperationReadyState: OperationState {
     
-    open weak var context: Context?
+    public weak var context: Context?
     
-    open var isFinished: Bool { false }
+    public var isFinished: Bool { false }
     
-    open var isExecuting: Bool { false }
+    public var isExecuting: Bool { false }
     
-    open var isCanceled: Bool { false }
+    public var isCanceled: Bool { false }
     
-    open var isSuspended: Bool { false }
+    public var isSuspended: Bool { false }
     
-    open var state: OperationStates { .ready }
+    public var state: OperationStates { .ready }
     
-    open var queueState:OperationStateInfoModel
+    public var queueState:OperationStateInfoModel
     
     required public init(context: Context? = nil, queueState: OperationStateInfoModel = .init(enqueued: false)) {
         self.context = context
@@ -49,7 +49,7 @@ open class OperationReadyState: OperationState {
     }
     
     
-    open func cancelOperation() throws {
+    public func cancelOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -66,7 +66,7 @@ open class OperationReadyState: OperationState {
     /// on operation subclass in order to start task and change its state
     /// `enqueued.enqueued` is `true` on this state
     /// - Throws: Throws OperationControllerError.dealocatedOperation if the context is nil
-    open func start() throws {
+    public func start() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -77,11 +77,11 @@ open class OperationReadyState: OperationState {
         // handle complete and cancel event when deadline is more than 0.0 and operation is waiting to be enqueued
         self.queueState.enqueued = true
         context.changeState(new: OperationExecutingState(context: context, queueState: queueState))
-        try context.startRunnable()
+        try context.startOperation()
         context.onExecuting?()
     }
     
-    open func completeOperation() throws {
+    public func completeOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -98,7 +98,7 @@ open class OperationReadyState: OperationState {
         ))
     }
     
-    open func suspend() throws {
+    public func suspend() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -122,7 +122,7 @@ open class OperationReadyState: OperationState {
     /// - Parameter after: amount of time to tolerate until the operation will be added
     /// - Throws: Throws OperationControllerError.dealocatedOperation if the context is nil
     
-    open func await() throws {
+    public func await() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -133,10 +133,10 @@ open class OperationReadyState: OperationState {
         
         /// from suspend to ready
         if queueState.enqueued {
-            try context.startRunnable()
+            try context.startOperation()
             return
         }
         
-        try context.enqueueSelf()
+        try context.enqueueOperation()
     }
 }

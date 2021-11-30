@@ -49,7 +49,7 @@ internal final class OperationCancelState: OperationState {
         self.queueState.enqueued = false
     }
     
-    func start() throws {
+    internal func start() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -73,7 +73,7 @@ internal final class OperationCancelState: OperationState {
         ))
     }
     
-    func suspend() throws {
+    internal func suspend() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -89,7 +89,7 @@ internal final class OperationCancelState: OperationState {
         ))
     }
     
-    func await() throws {
+    internal func await() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -105,7 +105,7 @@ internal final class OperationCancelState: OperationState {
         ))
     }
     
-    func cancelOperation() throws {
+    internal func cancelOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
@@ -120,7 +120,7 @@ internal final class OperationCancelState: OperationState {
         ))
     }
     
-    func completeOperation() throws {
+    internal func completeOperation() throws {
         guard let context = context else {
             throw SFOError.operationStateError(reason: .dealocatedOperation(
                 """
