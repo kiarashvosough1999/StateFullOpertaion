@@ -24,123 +24,143 @@ class SafeOperationTests: XCTestCase {
     
     func testFinishAuto() throws {
         let insideMethodExpectation = XCTestExpectation()
-        insideMethodExpectation.expectedFulfillmentCount = 4
+        insideMethodExpectation.expectedFulfillmentCount = 3
         
         
-        let op = MySafeOperationMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
+        let op = MySafeOperationTaskMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
         
         op.onCompleted = {
             XCTAssertEqual(self.queue?.operationCount, 0)
         }
         
-        try op.enqueueSelf()
+        try op.enqueueOperation()
         wait(for: [insideMethodExpectation], timeout: 6)
     }
     
     func testFinish() throws {
         let insideMethodExpectation = XCTestExpectation()
-        insideMethodExpectation.expectedFulfillmentCount = 4
+        insideMethodExpectation.expectedFulfillmentCount = 5
         
-        let StartMethodExpectation = XCTestExpectation()
-        StartMethodExpectation.expectedFulfillmentCount = 1
+        let op = MySafeOperationFinishMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
         
-        let op = MySafeOperationMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation, startExpectation: StartMethodExpectation)
+        try op.enqueueOperation()
+        try op.finishOperation()
         
-        op.onCompleted = {
-            XCTAssertEqual(self.queue?.operationCount, 0)
-        }
-        
-        try op.enqueueSelf()
-        try op.finishRunnable()
+        XCTAssertEqual(self.queue?.operationCount, 0)
     }
     
-    func testCancelRunnable() throws {
+    func testCancelOperation() throws {
 
         let insideMethodExpectation = XCTestExpectation()
-        insideMethodExpectation.expectedFulfillmentCount = 3
+        insideMethodExpectation.expectedFulfillmentCount = 5
         
         
-        let op = MySafeOperationMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
+        let op = MySafeOperationCancelMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
         
-        try op.enqueueSelf()
-        try op.cancelRunnable()
+        try op.enqueueOperation()
+        try op.cancelOperation()
+        
         XCTAssertEqual(queue?.operationCount, 0)
+        XCTAssertEqual(op.isFinished, true)
+        XCTAssertEqual(op.isExecuting, false)
+        XCTAssertEqual(op.isCancelled, true)
     }
     
     func testCancel() throws {
         let insideMethodExpectation = XCTestExpectation()
-        insideMethodExpectation.expectedFulfillmentCount = 3
+        insideMethodExpectation.expectedFulfillmentCount = 5
         
         
-        let op = MySafeOperationMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
+        let op = MySafeOperationCancelMock(operationQueue: queue, configuration: .init(), expectation: insideMethodExpectation)
         
-        try op.enqueueSelf()
+        try op.enqueueOperation()
         op.cancel()
-        print(op.isExecuting,
-              op.isFinished,
-              op.isCancelled)
+        
+        XCTAssertEqual(op.isFinished, true)
+        XCTAssertEqual(op.isExecuting, false)
+        XCTAssertEqual(op.isCancelled, true)
         XCTAssertEqual(queue?.operationCount, 0)
     }
     
     func testWaitForAllOperation() throws {
         let insideMethodExpectation1 = XCTestExpectation()
-        insideMethodExpectation1.expectedFulfillmentCount = 1
+        insideMethodExpectation1.expectedFulfillmentCount = 2
 
         let insideMethodExpectation2 = XCTestExpectation()
-        insideMethodExpectation2.expectedFulfillmentCount = 1
+        insideMethodExpectation2.expectedFulfillmentCount = 2
         
-        let op1 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation1)
-        let op2 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation2)
+        let op1 = MySafeOperationWaitingMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation1)
+        let op2 = MySafeOperationWaitingMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation2)
         
-        try op1.enqueueSelf()
-        try op2.enqueueSelf()
+        try op1.enqueueOperation()
+        try op2.enqueueOperation()
         
-        try op1.waitUntilAllOperationsAreFinished()
-        try op2.waitUntilAllOperationsAreFinished()
+        try op1.waitUntilAllOperationAreFinished()
+        try op2.waitUntilAllOperationAreFinished()
         
-        wait(for: [insideMethodExpectation1, insideMethodExpectation2], timeout: 5)
-        
+        wait(for: [insideMethodExpectation1, insideMethodExpectation2], timeout: 0)
     }
     
     func testDependency() throws {
         let insideMethodExpectation1 = XCTestExpectation(description: "test 1")
-        insideMethodExpectation1.expectedFulfillmentCount = 1
+        insideMethodExpectation1.expectedFulfillmentCount = 2
 
         let insideMethodExpectation2 = XCTestExpectation(description: "test 2")
-        insideMethodExpectation2.expectedFulfillmentCount = 1
+        insideMethodExpectation2.expectedFulfillmentCount = 2
         
-        let op1 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation1)
-        let op2 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: true), expectation: insideMethodExpectation2)
+        let op1 = MySafeOperationDependencyMock(operationQueue: queue,
+                                                configuration: .init(waitUntilAllOperationsAreFinished: true),
+                                                expectation: insideMethodExpectation1)
+        
+        let op2 = MySafeOperationDependencyMock(operationQueue: queue,
+                                                configuration: .init(waitUntilAllOperationsAreFinished: true),
+                                                expectation: insideMethodExpectation2)
         
         try op2.dependsOn(op1)
         
-        try op1.enqueueSelf()
-        try op2.enqueueSelf()
+        try op1.enqueueOperation()
         
-        try op1.waitUntilAllOperationsAreFinished()
-        try op2.waitUntilAllOperationsAreFinished()
-        wait(for: [insideMethodExpectation1, insideMethodExpectation2], timeout: 10)
+        try op2.enqueueOperation()
+        
+        
+        wait(for: [insideMethodExpectation1, insideMethodExpectation2], timeout: 10 + 0.5)
     }
     
     func testNilQueueForWaiting() throws {
         
-        let insideMethodExpectation1 = XCTestExpectation(description: "test 1")
-        insideMethodExpectation1.expectedFulfillmentCount = 1
+        let op1 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: false))
         
-        let op1 = MySafeOperationMock(operationQueue: queue, configuration: .init(waitUntilAllOperationsAreFinished: false), expectation: insideMethodExpectation1)
-        
-        
-        try op1.enqueueSelf()
+        try op1.enqueueOperation()
         
         op1.operationQueue = nil
         
-        XCTAssertThrowsError(try op1.waitUntilAllOperationsAreFinished())
+        XCTAssertThrowsError(try op1.waitUntilAllOperationAreFinished())
     }
 
     func testnilQueue() throws {
         let op = MySafeOperationMock(operationQueue: nil, configuration: .init())
         
-        XCTAssertThrowsError(try op.enqueueSelf())
+        XCTAssertThrowsError(try op.enqueueOperation())
+    }
+    
+    func testBlockTask() {
+        
+        let expectation = XCTestExpectation(description: "test 1")
+        expectation.expectedFulfillmentCount = 2
+        
+        let op = MySafeOperationMock(operationQueue: queue, configuration: .init())
+        
+        op.operationExecutable = { finished in
+            expectation.fulfill()
+            Thread.sleep(forTimeInterval: 2)
+            expectation.fulfill()
+        }
+        
+        XCTAssertNoThrow(try op.enqueueOperation())
+        
+        wait(for: [expectation], timeout: 2.5)
+        
+//        XCTAssertTrue(op.isFinished)
     }
     
     func testPerformanceExample() throws {
