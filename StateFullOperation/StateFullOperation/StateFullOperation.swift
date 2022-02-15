@@ -104,14 +104,25 @@ public class StateFullOperation: SafeOperation,
     
     //MARK: - init
     
-    public init(operationQueue: OperationQueue?,
-                configuration: SafeOperationConfiguration,
-                operationState: OperationState = OperationReadyState()) {
+    public init(operationState: OperationState = OperationReadyState()) {
         self.operationState = operationState
-        super.init(operationQueue: operationQueue, configuration: configuration)
+        super.init()
         self.operationState.context = self
     }
     
+    public init(operationQueue: OperationQueue?,
+                operationState: OperationState = OperationReadyState()) {
+        self.operationState = operationState
+        super.init(operationQueue: operationQueue)
+        self.operationState.context = self
+    }
+    
+    public init(configuration: SafeOperationConfiguration,
+                operationState: OperationState = OperationReadyState()) {
+        self.operationState = operationState
+        super.init(configuration: configuration)
+        self.operationState.context = self
+    }
     
     //MARK: - Operation Control
     

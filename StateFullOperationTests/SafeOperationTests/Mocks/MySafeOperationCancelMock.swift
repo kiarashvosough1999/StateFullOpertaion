@@ -23,7 +23,7 @@ final class MySafeOperationCancelMock: SafeOperation {
     override func operation() throws {
         /// impelement your task here
         /// call `cancelRunnable()` whenever the task finish
-        try super.operation()
+//        try super.operation()
         expectation.fulfill()
         Thread.sleep(forTimeInterval: .infinity)
     }

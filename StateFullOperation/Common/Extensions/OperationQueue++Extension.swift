@@ -27,7 +27,7 @@ extension OperationQueue {
         operation.onCanceledOperationAction = onCanceled
         operation.onFinishedOperationAction = onFinished
         operation.onExecutingOperationAction = onExecuting
-        try operation.enqueueOperation()
+        try operation.enqueue()
         return operation
     }
 }

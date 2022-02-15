@@ -48,6 +48,9 @@
 		DE750F962756C00B0094AC0C /* MySafeOperationWaitingMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE750F952756C00B0094AC0C /* MySafeOperationWaitingMock.swift */; };
 		DE750F982756C2EF0094AC0C /* MySafeOperationDependencyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE750F972756C2EF0094AC0C /* MySafeOperationDependencyMock.swift */; };
 		DE8246E8274053D50016F239 /* MySafeOperationMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8246E7274053D50016F239 /* MySafeOperationMock.swift */; };
+		DE84662227BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */; };
+		DE8535F527BBF2C800589843 /* OperationControlable++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */; };
+		DE8535F727BBF2DB00589843 /* QueueableOperation++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */; };
 		DE99726F273AE78C0064E5C3 /* OperationQueue++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +68,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DE1A7B2227382CB6006AFE65;
 			remoteInfo = StateFullOperation;
+		};
+		DE84662327BBE067002F2B83 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DE1A7B1A27382CB6006AFE65 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DE1A7B7427382DC8006AFE65;
+			remoteInfo = Example;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -125,6 +135,9 @@
 		DE750F952756C00B0094AC0C /* MySafeOperationWaitingMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySafeOperationWaitingMock.swift; sourceTree = "<group>"; };
 		DE750F972756C2EF0094AC0C /* MySafeOperationDependencyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySafeOperationDependencyMock.swift; sourceTree = "<group>"; };
 		DE8246E7274053D50016F239 /* MySafeOperationMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySafeOperationMock.swift; sourceTree = "<group>"; };
+		DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IdentifiableOperation++Protocol.swift"; sourceTree = "<group>"; };
+		DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationControlable++Protocol.swift"; sourceTree = "<group>"; };
+		DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QueueableOperation++Protocol.swift"; sourceTree = "<group>"; };
 		DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue++Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -229,6 +242,9 @@
 				DE1A7B5D27382D99006AFE65 /* OperationLifeCycleProvider++Protocol.swift */,
 				DE1A7B5F27382D99006AFE65 /* OperationState++Protocol.swift */,
 				DE1A7B6027382D99006AFE65 /* StateSupplementaryActionProvider++Protocol.swift */,
+				DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */,
+				DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */,
+				DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -376,6 +392,7 @@
 			);
 			dependencies = (
 				DE1A7B3027382CB7006AFE65 /* PBXTargetDependency */,
+				DE84662427BBE067002F2B83 /* PBXTargetDependency */,
 			);
 			name = StateFullOperationTests;
 			productName = StateFullOperationTests;
@@ -479,6 +496,7 @@
 				DE1A7B4F27382D89006AFE65 /* OperationCancelState.swift in Sources */,
 				DE1A7B6B27382D9F006AFE65 /* OperationStateInfoModel.swift in Sources */,
 				DE1A7B5227382D89006AFE65 /* OperationSuspendState.swift in Sources */,
+				DE8535F727BBF2DB00589843 /* QueueableOperation++Protocol.swift in Sources */,
 				DE1A7B5A27382D93006AFE65 /* SafeOperation++OperationDependencyProtocol.swift in Sources */,
 				DE1A7B6327382D99006AFE65 /* OperationLifeCycleProvider++Protocol.swift in Sources */,
 				DE1A7B7027382DA8006AFE65 /* SFOError.swift in Sources */,
@@ -495,9 +513,11 @@
 				DE1A7B5927382D93006AFE65 /* SafeOperation.swift in Sources */,
 				DE1A7B6127382D99006AFE65 /* OperationContextStateObject++Protocol.swift in Sources */,
 				DE1A7B5727382D93006AFE65 /* SafeOperation++IdentifiableOperation.swift in Sources */,
+				DE84662227BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift in Sources */,
 				DE1A7B2827382CB6006AFE65 /* StateFullOperation.docc in Sources */,
 				DE1A7B6A27382D9F006AFE65 /* OperationIdentifier.swift in Sources */,
 				DE1A7B5827382D93006AFE65 /* SafeOperation++Configuration.swift in Sources */,
+				DE8535F527BBF2C800589843 /* OperationControlable++Protocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,6 +558,11 @@
 			isa = PBXTargetDependency;
 			target = DE1A7B2227382CB6006AFE65 /* StateFullOperation */;
 			targetProxy = DE1A7B8D27382EFC006AFE65 /* PBXContainerItemProxy */;
+		};
+		DE84662427BBE067002F2B83 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DE1A7B7427382DC8006AFE65 /* Example */;
+			targetProxy = DE84662327BBE067002F2B83 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -613,7 +638,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -671,7 +696,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -686,6 +711,7 @@
 		DE1A7B3827382CB7006AFE65 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -696,6 +722,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -705,6 +733,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = KiarashVosough.StateFullOperation;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -714,6 +743,7 @@
 		DE1A7B3927382CB7006AFE65 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -724,6 +754,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				"IPHONEOS_DEPLOYMENT_TARGET[sdk=macosx*]" = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -733,6 +765,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = KiarashVosough.StateFullOperation;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

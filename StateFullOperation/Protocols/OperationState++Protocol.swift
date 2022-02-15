@@ -43,7 +43,8 @@ public protocol OperationState: OperationStateBase {
     OperationController &
     OperationContextStateProvider &
     IdentifiableOperation &
-    OperationLifeCycleProvider
+    OperationLifeCycleProvider &
+    OperationControlable
     
     init(context: Context?, queueState: OperationStateInfoModel)
     

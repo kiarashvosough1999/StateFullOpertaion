@@ -1,8 +1,8 @@
 //
-//  SafeOperation++Configuration.swift
-//  StateFullOpertaion
+//  IdentifiableOperation++Protocol.swift
+//  StateFullOperation
 //
-//  Created by Kiarash Vosough on 5/24/1400 AP.
+//  Created by Kiarash Vosough on 2/15/22.
 //
 //  Copyright 2020 KiarashVosough and other contributors
 //
@@ -27,17 +27,21 @@
 
 import Foundation
 
-public struct SafeOperationConfiguration {
+public protocol IdentifiableOperation: AnyObject {
+    var identifier: OperationIdentifier { get }
+}
+
+extension IdentifiableOperation where Self: Operation {
     
-    public let identifier: OperationIdentifier
-    public let queuePriority: Operation.QueuePriority
-    public let qualityOfService: QualityOfService
-    
-    public init(identifier: OperationIdentifier = .unique(),
-                queuePriority: Operation.QueuePriority = .normal,
-                qualityOfService: QualityOfService = .default) {
-        self.identifier = identifier
-        self.queuePriority = queuePriority
-        self.qualityOfService = qualityOfService
+    /// `Unique` identifier for this operation
+    /// This identifier shold stay unique or it will results in crash or mis behavior
+    /// if attemting to add or remove dependency
+    public var identifier: OperationIdentifier {
+        precondition(name != nil, "")
+        guard let name = name,
+              let id = OperationIdentifier(rawValue: name) else {
+            fatalError("operation has no identifier")
+        }
+        return id
     }
 }
