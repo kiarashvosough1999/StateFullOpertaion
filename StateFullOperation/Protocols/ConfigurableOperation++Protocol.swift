@@ -29,5 +29,14 @@ import Foundation
 
 internal protocol ConfigurableOperation {
     
-    var configuration: SafeOperationConfiguration { get }
+    func setupOperation(with configuration: SafeOperationConfiguration)
+}
+
+extension ConfigurableOperation where Self: Operation {
+    
+    func setupOperation(with configuration: SafeOperationConfiguration) {
+        self.queuePriority = configuration.queuePriority
+        self.qualityOfService = configuration.qualityOfService
+        self.name = configuration.identifier.rawValue
+    }
 }

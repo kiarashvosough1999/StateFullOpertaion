@@ -49,6 +49,8 @@
 		DE750F982756C2EF0094AC0C /* MySafeOperationDependencyMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE750F972756C2EF0094AC0C /* MySafeOperationDependencyMock.swift */; };
 		DE8246E8274053D50016F239 /* MySafeOperationMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8246E7274053D50016F239 /* MySafeOperationMock.swift */; };
 		DE84662227BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */; };
+		DE8535F527BBF2C800589843 /* OperationControlable++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */; };
+		DE8535F727BBF2DB00589843 /* QueueableOperation++Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */; };
 		DE99726F273AE78C0064E5C3 /* OperationQueue++Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */; };
 /* End PBXBuildFile section */
 
@@ -134,6 +136,8 @@
 		DE750F972756C2EF0094AC0C /* MySafeOperationDependencyMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySafeOperationDependencyMock.swift; sourceTree = "<group>"; };
 		DE8246E7274053D50016F239 /* MySafeOperationMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySafeOperationMock.swift; sourceTree = "<group>"; };
 		DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IdentifiableOperation++Protocol.swift"; sourceTree = "<group>"; };
+		DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationControlable++Protocol.swift"; sourceTree = "<group>"; };
+		DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "QueueableOperation++Protocol.swift"; sourceTree = "<group>"; };
 		DE99726E273AE78C0064E5C3 /* OperationQueue++Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OperationQueue++Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -239,6 +243,8 @@
 				DE1A7B5F27382D99006AFE65 /* OperationState++Protocol.swift */,
 				DE1A7B6027382D99006AFE65 /* StateSupplementaryActionProvider++Protocol.swift */,
 				DE84662127BBDF7E002F2B83 /* IdentifiableOperation++Protocol.swift */,
+				DE8535F427BBF2C800589843 /* OperationControlable++Protocol.swift */,
+				DE8535F627BBF2DB00589843 /* QueueableOperation++Protocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -490,6 +496,7 @@
 				DE1A7B4F27382D89006AFE65 /* OperationCancelState.swift in Sources */,
 				DE1A7B6B27382D9F006AFE65 /* OperationStateInfoModel.swift in Sources */,
 				DE1A7B5227382D89006AFE65 /* OperationSuspendState.swift in Sources */,
+				DE8535F727BBF2DB00589843 /* QueueableOperation++Protocol.swift in Sources */,
 				DE1A7B5A27382D93006AFE65 /* SafeOperation++OperationDependencyProtocol.swift in Sources */,
 				DE1A7B6327382D99006AFE65 /* OperationLifeCycleProvider++Protocol.swift in Sources */,
 				DE1A7B7027382DA8006AFE65 /* SFOError.swift in Sources */,
@@ -510,6 +517,7 @@
 				DE1A7B2827382CB6006AFE65 /* StateFullOperation.docc in Sources */,
 				DE1A7B6A27382D9F006AFE65 /* OperationIdentifier.swift in Sources */,
 				DE1A7B5827382D93006AFE65 /* SafeOperation++Configuration.swift in Sources */,
+				DE8535F527BBF2C800589843 /* OperationControlable++Protocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

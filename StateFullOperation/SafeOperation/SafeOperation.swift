@@ -51,9 +51,11 @@ import Foundation
  , instead they can override the provided method on protocol `OperationLifeCycleProvider` to take control of what should be done
  
  */
-open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOperation {
+open class SafeOperation: Operation, OperationLifeCycleProvider, OperationControlable, QueueableOperation ,ConfigurableOperation {
     
-    internal private(set) var configuration: SafeOperationConfiguration
+    public typealias Queue = OperationQueue
+    
+    internal var operationQueueAssociationKey: UInt8 = 0
     
     /// Any changes to operation flags will be stored on these variables to keep track of states
     public lazy var _executing: Bool = false
@@ -132,37 +134,41 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     open override var isAsynchronous: Bool { return true }
     
     /// a `mutex lock` to `synchronize` Control properties between threads
-    public let lock: NSLock
+    public let lock: NSLock = NSLock()
     
-    /// The `OperationQueue` which this operation work with
-    /// Any unconsidered manipulation on this reference will results in unexcpected behavior on queue
-    public weak var operationQueue: OperationQueue?
+    weak public var operationQueue: OperationQueue?
     
     // MARK: - LifeCycle
     
-    public init(operationQueue: OperationQueue?,
-                configuration: SafeOperationConfiguration) {
-        self.lock = NSLock()
-        self.operationQueue = operationQueue
-        self.configuration = configuration
+    public override init() {
         super.init()
-        setOperationConfigurationChanges()
     }
     
-    private func setOperationConfigurationChanges() {
-        self.queuePriority = configuration.queuePriority
-        self.qualityOfService = configuration.qualityOfService
-        self.name = configuration.identifier.rawValue
+    public init(configuration: SafeOperationConfiguration) {
+        super.init()
+        setupOperation(with: configuration)
+    }
+    
+    public init(operationQueue: OperationQueue?) {
+        super.init()
+        self.operationQueue = operationQueue
+    }
+    
+    public init(operationQueue: OperationQueue?, configuration: SafeOperationConfiguration) {
+        super.init()
+        self.operationQueue = operationQueue
+        setupOperation(with: configuration)
     }
     
     /// Do not override this method
     /// Override shouldStartRunnable instead
     public override func start() {
         do {
-            onExecutingOperationAction?()
             try shouldStartOperation()
+            onExecutingOperationAction?()
         } catch {
-            fatalError()
+            debugPrint(error)
+            fatalError(error.localizedDescription)
         }
     }
     
@@ -170,6 +176,8 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     /// default implementaion checks for cancled or finished operation and throws error
     /// - Throws : `SFOError.safeOperationError` with reason `operationAlreadyCanceled`
     open func shouldStartOperation() throws {
+        precondition(isCancelled || isFinished,
+                     "operation with identifier \(identifier) is already canceled or finished, cannot start operation")
         if isCancelled || isFinished {
             isFinished = true
             isExecuting = false
@@ -202,7 +210,6 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     
     /// Do not override this method or call
     open override func cancel() {
-        super.cancel()
         do {
             try cancelOperation()
         } catch {
@@ -234,7 +241,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     
     // MARK: - Queue Methods
     
-    open func enqueueOperation() throws {
+    open func enqueue() throws {
         guard let queue = operationQueue else {
             throw SFOError
                 .safeOperationError(reason: .queueFoundNil("Can not enqueue operation with identifier \(identifier)", type: .operation(" OperationQueue assosiatated with operation with identifier \(identifier) was found nil"))
@@ -244,7 +251,7 @@ open class SafeOperation: Operation, OperationLifeCycleProvider, ConfigurableOpe
     }
     
     open func waitUntilAllOperationAreFinished() throws {
-        guard let queue = operationQueue, configuration.waitUntilAllOperationsAreFinished else {
+        guard let queue = operationQueue else {
             throw SFOError.safeOperationError(reason: .canNotWaitForOtherOperation("""
                 Could not wait for all operation to finish,
                 OperationQueue associated on operation with identifier: \(name ?? "") was found nil

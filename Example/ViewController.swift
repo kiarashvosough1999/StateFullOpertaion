@@ -17,7 +17,8 @@ class ViewController: UIViewController {
         
         do {
             let op = MyOperation(operationQueue: queue, configuration: .init())
-            try op.enqueueOperation()
+            try op.enqueue()
+            
             DispatchQueue.main.asyncAfter(deadline: .now() + 9) {
                 print(self.queue.operationCount)
             }
